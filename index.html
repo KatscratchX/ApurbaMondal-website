@@ -797,8 +797,13 @@
     background: var(--warm-white);
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 100px;
+    grid-template-rows: auto auto;
+    gap: 60px 100px;
     align-items: start;
+  }
+
+  .skills-education {
+    grid-column: 1 / -1;
   }
 
   .skills-left h2 {
@@ -977,8 +982,9 @@
     background: var(--charcoal);
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
+    grid-template-rows: auto auto;
+    gap: 0 80px;
+    align-items: start;
     position: relative;
     overflow: hidden;
   }
@@ -1022,14 +1028,14 @@
   .contact-links {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 8px;
     justify-content: center;
   }
   .contact-link {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 28px 32px;
+    padding: 18px 24px;
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.06);
     text-decoration: none;
@@ -1085,82 +1091,6 @@
   .art-toggle:hover {
     background: var(--rust);
     color: #fff;
-  }
-  .art-toggle-arrow {
-    display: inline-block;
-    transition: transform 0.35s cubic-bezier(.16,1,.3,1);
-    font-size: 0.9rem;
-  }
-  .art-toggle[aria-expanded="true"] .art-toggle-arrow {
-    transform: rotate(180deg);
-  }
-  .art-toggle[aria-expanded="true"] .art-toggle-label::before {
-    content: 'Hide art';
-  }
-  .art-toggle[aria-expanded="false"] .art-toggle-label::before {
-    content: 'View my art';
-  }
-  .art-toggle-label {
-    font-size: 0;
-  }
-  .art-toggle-label::before {
-    font-size: 0.8rem;
-  }
-
-  .art-gallery {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.5s cubic-bezier(.16,1,.3,1);
-    margin-top: 0;
-    overflow: hidden;
-  }
-  .art-gallery.open {
-    grid-template-rows: 1fr;
-    margin-top: 20px;
-  }
-  .art-grid {
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-  }
-  .art-thumb {
-    aspect-ratio: 1;
-    border-radius: 8px;
-    overflow: hidden;
-    background: var(--sand-light);
-    position: relative;
-    cursor: none;
-    transition: transform 0.3s;
-  }
-  .art-thumb:hover {
-    transform: scale(1.03);
-  }
-  .art-thumb img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .art-placeholder {
-    width: 100%; height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-  }
-  .art-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--sand);
-  }
-  .art-hint {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.55rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--sand);
   }
 
   /* LIGHTBOX */
@@ -1411,9 +1341,26 @@
       padding: 80px 30px;
       gap: 50px;
     }
+    /* On mobile: show icon row (inside contact-left), hide full tiles */
+    .contact-icons-row {
+      display: flex;
+    }
+    .contact-link {
+      display: none;
+    }
+    .contact-form-wrap {
+      margin-top: 40px;
+      padding-top: 40px;
+    }
+    .skills-section {
+      grid-template-columns: 1fr;
+    }
+    .skills-education {
+      grid-column: 1;
+    }
     .work { padding: 80px 30px; }
     .projects-grid { grid-template-columns: 1fr; }
-    .project-card.wide { grid-column: span 1; }
+    .project-card.wide { grid-column: 1 / -1; }
     .experience { padding: 80px 30px; }
     .timeline::before { left: 0; }
     .timeline-item { grid-template-columns: 1fr; }
@@ -1425,6 +1372,13 @@
     .maker-thumb:first-child { grid-column: span 1; }
     footer { padding: 30px; flex-direction: column; gap: 12px; text-align: center; }
     .nav-links { gap: 20px; }
+    /* Maker section mobile */
+    .maker {
+      padding: 80px 20px;
+    }
+    .maker-content p {
+      padding: 0;
+    }
   }
 
   @media (max-width: 650px) {
@@ -1439,6 +1393,10 @@
     .filter-pills {
       flex-wrap: wrap;
       gap: 8px;
+    }
+    /* Maker section extra tightening on small screens */
+    .maker {
+      padding: 60px 16px;
     }
   }
 
@@ -1456,6 +1414,423 @@
       letter-spacing: 0.06em;
     }
   }
+
+  /* ── ART MODAL ─────────────────────────────────────────────────────────── */
+  .art-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(.16,1,.3,1);
+    cursor: none;
+  }
+  .art-modal * {
+    cursor: none;
+  }
+  .art-modal.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .art-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(20,18,16,0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .art-modal-panel {
+    position: relative;
+    z-index: 1;
+    background: var(--warm-white);
+    border-radius: 16px;
+    width: min(92vw, 780px);
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.94) translateY(16px);
+    transition: transform 0.4s cubic-bezier(.16,1,.3,1);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+  }
+  .art-modal.active .art-modal-panel {
+    transform: scale(1) translateY(0);
+  }
+
+  /* Grid view */
+  .art-modal-grid-view {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 32px 32px 36px;
+    max-height: 90vh;
+  }
+
+  .art-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    flex-shrink: 0;
+  }
+  .art-modal-title {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .art-modal-title-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--charcoal);
+    line-height: 1;
+  }
+  .art-modal-title-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mid);
+  }
+
+  .art-modal-close {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid var(--sand);
+    background: transparent;
+    color: var(--mid);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: none;
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .art-modal-close:hover {
+    background: var(--charcoal);
+    border-color: var(--charcoal);
+    color: #fff;
+  }
+
+  .art-modal-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .art-modal-section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--sand-light);
+  }
+
+  .art-modal-thumbs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .art-modal-thumb {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    cursor: none;
+    background: var(--sand-light);
+    transition: transform 0.25s cubic-bezier(.16,1,.3,1), box-shadow 0.25s;
+  }
+  .art-modal-thumb:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+  }
+  .art-modal-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: filter 0.25s;
+  }
+  .art-modal-thumb:hover img {
+    filter: brightness(0.88);
+  }
+  .art-modal-thumb-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 20px 12px 10px;
+    background: linear-gradient(to top, rgba(20,18,16,0.75) 0%, transparent 100%);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .art-modal-thumb:hover .art-modal-thumb-label {
+    opacity: 1;
+  }
+
+  /* Enlarge view */
+  .art-modal-enlarge-view {
+    display: none;
+    flex-direction: column;
+    height: 90vh;
+    max-height: 90vh;
+    background: #1a1816;
+  }
+
+  .art-modal-enlarge-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .art-modal-back {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    background: transparent;
+    border: none;
+    cursor: none;
+    transition: color 0.2s;
+    padding: 0;
+  }
+  .art-modal-back:hover { color: rgba(255,255,255,0.9); }
+  .art-modal-enlarge-view .art-modal-close {
+    border-color: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5);
+  }
+  .art-modal-enlarge-view .art-modal-close:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.3);
+    color: #fff;
+  }
+
+  .art-modal-enlarge-img-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 24px;
+  }
+  .art-modal-enlarge-img-wrap img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    display: block;
+    transition: opacity 0.2s;
+  }
+
+  .art-modal-enlarge-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 16px 24px 20px;
+    flex-shrink: 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .art-modal-nav {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.6);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: none;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .art-modal-nav:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.3);
+    color: #fff;
+  }
+  .art-modal-counter {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* Also update art-toggle arrow since it's now a launcher not an accordion */
+  .art-toggle-arrow { font-size: 0.8rem; }
+
+  @media (max-width: 600px) {
+    .art-modal-panel { width: 96vw; max-height: 92vh; }
+    .art-modal-grid-view { padding: 20px 16px 24px; }
+    .art-modal-thumbs { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  }
+
+  /* Contact icon row — mobile only */
+  .contact-icons-row {
+    gap: 10px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  @media (min-width: 1025px) {
+    .contact-icons-row { display: none !important; }
+  }
+
+  .contact-icon-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    background: none;
+    border: none;
+    text-decoration: none;
+    color: rgba(255,255,255,0.6);
+    transition: color 0.25s;
+  }
+  .contact-icon-btn:hover {
+    color: var(--rust-light);
+  }
+  .contact-icon-btn span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ── CONTACT FORM ───────────────────────────────────────────────────────── */
+  .contact-form-wrap {
+    grid-column: 1 / -1;
+    margin-top: 60px;
+    padding-top: 60px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .contact-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .contact-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .contact-form-field.full {
+    grid-column: 1 / -1;
+  }
+  .contact-form-field label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+  .contact-form-field input,
+  .contact-form-field textarea {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 14px 16px;
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.25s, background 0.25s;
+    resize: none;
+    cursor: none;
+  }
+  .contact-form-field input::placeholder,
+  .contact-form-field textarea::placeholder {
+    color: rgba(255,255,255,0.2);
+  }
+  .contact-form-field input:focus,
+  .contact-form-field textarea:focus {
+    border-color: var(--rust);
+    background: rgba(255,255,255,0.06);
+  }
+  .contact-form-field textarea {
+    height: 120px;
+  }
+  .contact-form-submit {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 4px;
+  }
+  .contact-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    background: var(--rust);
+    border: none;
+    border-radius: 100px;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    cursor: none;
+    transition: background 0.25s, transform 0.2s;
+  }
+  .contact-submit-btn:hover {
+    background: var(--rust-light);
+    transform: translateY(-1px);
+  }
+  .contact-submit-btn:disabled {
+    opacity: 0.5;
+    transform: none;
+  }
+  .contact-submit-btn .btn-arrow {
+    font-size: 1rem;
+    transition: transform 0.2s;
+  }
+  .contact-submit-btn:hover .btn-arrow {
+    transform: translate(3px, -3px);
+  }
+  .contact-form-status {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.4);
+    display: none;
+  }
+  .contact-form-status.success {
+    display: block;
+    color: #6fcf97;
+  }
+  .contact-form-status.error {
+    display: block;
+    color: #eb5757;
+  }
+
+  @media (max-width: 700px) {
+    .contact-form { grid-template-columns: 1fr; }
+    .contact-form-field.full { grid-column: 1; }
+    .contact-form-submit { grid-column: 1; }
+  }
+
 </style>
 </head>
 <body>
@@ -1598,7 +1973,7 @@
     </div>
 
     <!-- Project 4: Echo Diagnostic -->
-    <div class="project-card" data-category="healthcare digital">
+    <div class="project-card wide" data-category="healthcare digital">
       <div class="project-info" style="border-top: none; border-bottom: 2px solid var(--sand-light);">
         <div class="project-meta">
           <span class="project-type">Product Design · Healthcare</span>
@@ -1611,10 +1986,7 @@
       </div>
     </div>
 
-
-
-  
-     <!-- Project 5: Needle Navigation -->
+    <!-- Project 5: Needle Navigation -->
     <div class="project-card" data-category="physical">
   <div class="project-media" style="background:#e8edf2; padding:0; overflow:hidden;">
     <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/needle-nav-1.png" 
@@ -1640,7 +2012,6 @@
     </div>
   </div>
 </div>
-   
 
     <!-- Project 6: Marbles -->
     <div class="project-card" data-category="healthcare physical freelance" onclick="window.location='marbles.html'" style="cursor:pointer;">
@@ -1716,7 +2087,6 @@
     </div>
   </div>
 </div>
-  
 
   </div>
 </section>
@@ -1814,6 +2184,25 @@
 
 <!-- SKILLS -->
 <section class="skills-section" id="skills">
+
+  <!-- Education — full-width row above the skills grid -->
+  <div class="skills-education fade-up">
+    <div class="section-label">Education</div>
+    <div style="margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap;">
+      <a href="https://www.idc.iitb.ac.in" target="_blank" style="text-decoration:none; display:block; flex:1; min-width:240px; padding: 24px; background: var(--cream); border: 1.5px solid var(--sand-light); transition: border-color 0.25s, background 0.25s;" onmouseover="this.style.borderColor='var(--rust)';this.style.background='var(--warm-white)'" onmouseout="this.style.borderColor='var(--sand-light)';this.style.background='var(--cream)'">
+        <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--rust); margin-bottom:6px;">2017 – 2019 · idc.iitb.ac.in ↗</div>
+        <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--charcoal);">M.Des Industrial Design</div>
+        <div style="font-size:0.85rem; color:var(--mid); margin-top:3px;">IDC, IIT Bombay · CGPA 8.25</div>
+      </a>
+      <a href="https://iiitd.ac.in" target="_blank" style="text-decoration:none; display:block; flex:1; min-width:240px; padding: 24px; background: var(--cream); border: 1.5px solid var(--sand-light); transition: border-color 0.25s, background 0.25s;" onmouseover="this.style.borderColor='var(--teal)';this.style.background='var(--warm-white)'" onmouseout="this.style.borderColor='var(--sand-light)';this.style.background='var(--cream)'">
+        <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--teal); margin-bottom:6px;">2013 – 2017 · iiitd.ac.in ↗</div>
+        <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--charcoal);">B.Tech Electronics & Communication</div>
+        <div style="font-size:0.85rem; color:var(--mid); margin-top:3px;">IIIT Delhi · CGPA 7.51</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Skills + Domain bars — 2-column grid below Education -->
   <div class="skills-left fade-up">
     <div class="section-label">Skills</div>
     <h2>What I bring to the <em>table</em>.</h2>
@@ -1862,6 +2251,8 @@
   </div>
 
   <div class="fade-up fade-up-delay-1">
+
+    <!-- Domain Depth -->
     <div class="section-label">Domain Depth</div>
     <div class="domain-bars" style="margin-top: 32px;">
       <div class="domain-bar">
@@ -1920,22 +2311,6 @@
       </div>
     </div>
 
-    <!-- Education -->
-    <div style="margin-top: 64px;">
-      <div class="section-label">Education</div>
-      <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 2px;">
-        <a href="https://www.idc.iitb.ac.in" target="_blank" style="text-decoration:none; display:block; padding: 24px; background: var(--cream); border: 1.5px solid var(--sand-light); transition: border-color 0.25s, background 0.25s;" onmouseover="this.style.borderColor='var(--rust)';this.style.background='var(--warm-white)'" onmouseout="this.style.borderColor='var(--sand-light)';this.style.background='var(--cream)'">
-          <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--rust); margin-bottom:6px;">2017 – 2019 · idc.iitb.ac.in ↗</div>
-          <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--charcoal);">M.Des Industrial Design</div>
-          <div style="font-size:0.85rem; color:var(--mid); margin-top:3px;">IDC, IIT Bombay · CGPA 8.25</div>
-        </a>
-        <a href="https://iiitd.ac.in" target="_blank" style="text-decoration:none; display:block; padding: 24px; background: var(--cream); border: 1.5px solid var(--sand-light); transition: border-color 0.25s, background 0.25s;" onmouseover="this.style.borderColor='var(--teal)';this.style.background='var(--warm-white)'" onmouseout="this.style.borderColor='var(--sand-light)';this.style.background='var(--cream)'">
-          <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--teal); margin-bottom:6px;">2013 – 2017 · iiitd.ac.in ↗</div>
-          <div style="font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--charcoal);">B.Tech Electronics & Communication</div>
-          <div style="font-size:0.85rem; color:var(--mid); margin-top:3px;">IIIT Delhi · CGPA 7.51</div>
-        </a>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1989,12 +2364,33 @@
     <p>
       Whether you're working on a healthcare product, a physical device, or something that blends both — I'd love to hear about it. I bring deep clinical knowledge and hands-on making skills that are hard to find in the same person.
     </p>
+    <!-- Icon row — appears below body text on mobile only -->
+    <div class="contact-icons-row" style="display:flex; gap:10px; margin-top:32px; flex-wrap:wrap;">
+      <a href="mailto:apurba.mondal59@gmail.com" class="contact-icon-btn" title="Email">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <span>Email</span>
+      </a>
+      <a href="https://linkedin.com/in/apurbamondal59/" target="_blank" class="contact-icon-btn" title="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        <span>LinkedIn</span>
+      </a>
+      <a href="tel:+918826358908" class="contact-icon-btn" title="Phone">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>Phone</span>
+      </a>
+      <a href="https://www.instagram.com/apurbamondal" target="_blank" class="contact-icon-btn" title="Instagram">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        <span>Instagram</span>
+      </a>
+    </div>
   </div>
   <div class="contact-links fade-up fade-up-delay-1">
-    <a href="/cdn-cgi/l/email-protection#315041444353505c5e5f55505d040871565c50585d1f525e5c" class="contact-link">
+
+    <!-- Full tiles: shown on desktop, hidden on mobile -->
+    <a href="/cdn-cgi/l/email-protection#2e4f5e5b5c4c4f004341404a4f421b176e49434f4742004d4143" class="contact-link">
       <div>
         <div class="contact-link-label">Email</div>
-        <div class="contact-link-value"><span class="__cf_email__" data-cfemail="d2b3a2a7a0b0b3bfbdbcb6b3bee7eb92b5bfb3bbbefcb1bdbf">[email&#160;protected]</span></div>
+        <div class="contact-link-value"><span class="__cf_email__" data-cfemail="bddccdc8cfdfdc93d0d2d3d9dcd18884fddad0dcd4d193ded2d0">[email&#160;protected]</span></div>
       </div>
       <div class="contact-link-arrow">↗</div>
     </a>
@@ -2012,13 +2408,37 @@
       </div>
       <div class="contact-link-arrow">↗</div>
     </a>
-    <a href="https://www.marbles.health/" target="_blank" class="contact-link">
+    <a href="https://www.instagram.com/apurbamondal" target="_blank" class="contact-link">
       <div>
-        <div class="contact-link-label">Featured Project</div>
-        <div class="contact-link-value">marbles.health</div>
+        <div class="contact-link-label">Instagram</div>
+        <div class="contact-link-value">@apurbamondal</div>
       </div>
       <div class="contact-link-arrow">↗</div>
     </a>
+  </div>
+
+  <!-- CONTACT FORM — full-width row below the two columns -->
+  <div class="contact-form-wrap fade-up">
+    <form class="contact-form" id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
+      <div class="contact-form-field">
+        <label for="cf-name">Your name</label>
+        <input type="text" id="cf-name" name="name" placeholder="Priya Sharma" required autocomplete="name">
+      </div>
+      <div class="contact-form-field">
+        <label for="cf-contact">Email or phone</label>
+        <input type="text" id="cf-contact" name="contact" placeholder="you@example.com / +91 98765 43210" required autocomplete="email">
+      </div>
+      <div class="contact-form-field full">
+        <label for="cf-message">Message</label>
+        <textarea id="cf-message" name="message" placeholder="Tell me about your project…" required></textarea>
+      </div>
+      <div class="contact-form-submit">
+        <button type="submit" class="contact-submit-btn" id="contactSubmitBtn">
+          Send message <span class="btn-arrow">↗</span>
+        </button>
+        <span class="contact-form-status" id="contactFormStatus"></span>
+      </div>
+    </form>
   </div>
 </section>
 
@@ -2035,59 +2455,23 @@
       <div class="personal-card">
         <div class="personal-card-icon">📍</div>
         <h3>Where I'm from</h3>
-        <p>I’ve lived in four different cities — growing up in fast-moving but familiar Delhi, hustling through my master’s at IIT in Bombay, spending my first working years in laid-back Pune, and now living in Bengaluru, which still feels like it’s figuring out its identity. Each place has shaped how I think about people, chaos, and design.</p>
+        <p>I've lived in four different cities — growing up in fast-moving but familiar Delhi, hustling through my master's at IIT in Bombay, spending my first working years in laid-back Pune, and now living in Bengaluru, which still feels like it's figuring out its identity. Each place has shaped how I think about people, chaos, and design.</p>
       </div>
 
       <div class="personal-card">
         <div class="personal-card-icon">🔧</div>
         <h3>The dreamer</h3>
-        <p>Watching my dad work on building plans while I flipped through stacks of architectural catalogues at home made me want to do something similar. That’s how I first picked up sketching, which gradually grew into making art across different mediums. It’s something I still enjoy, though I’d like to be more consistent with it. I’m also a classical Odissi dancer, and outside work I run, box, swim, cook, and generally find it hard to sit still. My cat Luffy keeps me grounded to find the right balance in life.  </p>
-        <button class="art-toggle" onclick="toggleArt(this)" aria-expanded="false">
+        <p>Watching my dad work on building plans while I flipped through stacks of architectural catalogues at home made me want to do something similar. That's how I first picked up sketching, which gradually grew into making art across different mediums. It's something I still enjoy, though I'd like to be more consistent with it. I'm also a classical Odissi dancer, and outside work I run, box, swim, cook, and generally find it hard to sit still. My cat Luffy keeps me grounded to find the right balance in life.  </p>
+        <button class="art-toggle" onclick="openArtModal()" aria-expanded="false">
           <span class="art-toggle-label">View my art</span>
-          <span class="art-toggle-arrow">↓</span>
+          <span class="art-toggle-arrow">↗</span>
         </button>
-        <div class="art-gallery" id="artGallery">
-          <div class="art-section-label">Illustrations</div>
-          <div class="art-grid">
-            <div class="art-thumb" onclick="openLightbox(0)" title="Sweep · Sting · Heavy">
-              <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-sweep.jpg" alt="Sweep · Sting · Heavy" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">
-              <div class="art-label">Sweep · Sting · Heavy</div>
-            </div>
-            <div class="art-thumb" onclick="openLightbox(1)" title="Reckless">
-              <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-reckless.jpg" alt="Reckless" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">
-              <div class="art-label">Reckless</div>
-            </div>
-            <div class="art-thumb" onclick="openLightbox(2)" title="Deer">
-              <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-deer.jpg" alt="Deer" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">
-              <div class="art-label">Deer</div>
-            </div>
-            <div class="art-thumb" onclick="openLightbox(3)" title="Pierce">
-              <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-pierce.jpg" alt="Pierce" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">
-              <div class="art-label">Pierce</div>
-            </div>
-            <div class="art-thumb" onclick="openLightbox(4)" title="Mustache">
-              <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-mustache.jpg" alt="Mustache" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">
-              <div class="art-label">Mustache</div>
-            </div>
-            <div class="art-thumb" onclick="openLightbox(5)" title="Weave">
-              <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-weave.jpg" alt="Weave" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">
-              <div class="art-label">Weave</div>
-            </div>
-          </div>
-          <div class="art-section-label" style="margin-top:24px;">Industrial Design Sketches</div>
-          <div class="art-grid art-grid--single">
-            <div class="art-thumb" onclick="openLightbox(6)" title="ID Sketches">
-              <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-id-sketches.jpg" alt="ID Sketches" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">
-              <div class="art-label">ID Sketches</div>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div class="personal-card">
         <div class="personal-card-icon">🪞</div>
         <h3>Honest about myself</h3>
-        <p>I enjoy thinking about both the big picture and the small details that make things work. I’m still learning to sit with ambiguity a little longer before jumping to solutions. Lately I’ve also been getting more interested in the business side of building products.</p>
+        <p>I enjoy thinking about both the big picture and the small details that make things work. I'm still learning to sit with ambiguity a little longer before jumping to solutions. Lately I've also been getting more interested in the business side of building products.</p>
       </div>
 
     </div>
@@ -2100,7 +2484,80 @@
   <p>Product & UX Designer · Bengaluru, India · 2025</p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><!-- LIGHTBOX -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+
+<!-- ART MODAL -->
+<div class="art-modal" id="artModal" role="dialog" aria-modal="true" aria-label="Art Gallery">
+  <div class="art-modal-backdrop" id="artModalBackdrop"></div>
+  <div class="art-modal-panel" id="artModalPanel">
+
+    <!-- Grid view -->
+    <div class="art-modal-grid-view" id="artGridView">
+      <div class="art-modal-header">
+        <div class="art-modal-title">
+          <span class="art-modal-title-label">My Art</span>
+          <span class="art-modal-title-sub">Illustrations &amp; ID Sketches</span>
+        </div>
+        <button class="art-modal-close" onclick="closeArtModal()" aria-label="Close">✕</button>
+      </div>
+
+      <div class="art-modal-section-label">Illustrations</div>
+      <div class="art-modal-thumbs">
+        <div class="art-modal-thumb" onclick="enlargeArt(0)">
+          <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-sweep.jpg" alt="Sweep · Sting · Heavy" loading="lazy">
+          <div class="art-modal-thumb-label">Sweep · Sting · Heavy</div>
+        </div>
+        <div class="art-modal-thumb" onclick="enlargeArt(1)">
+          <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-reckless.jpg" alt="Reckless" loading="lazy">
+          <div class="art-modal-thumb-label">Reckless</div>
+        </div>
+        <div class="art-modal-thumb" onclick="enlargeArt(2)">
+          <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-deer.jpg" alt="Deer" loading="lazy">
+          <div class="art-modal-thumb-label">Deer</div>
+        </div>
+        <div class="art-modal-thumb" onclick="enlargeArt(3)">
+          <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-pierce.jpg" alt="Pierce" loading="lazy">
+          <div class="art-modal-thumb-label">Pierce</div>
+        </div>
+        <div class="art-modal-thumb" onclick="enlargeArt(4)">
+          <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-mustache.jpg" alt="Mustache" loading="lazy">
+          <div class="art-modal-thumb-label">Mustache</div>
+        </div>
+        <div class="art-modal-thumb" onclick="enlargeArt(5)">
+          <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-weave.jpg" alt="Weave" loading="lazy">
+          <div class="art-modal-thumb-label">Weave</div>
+        </div>
+      </div>
+
+      <div class="art-modal-section-label" style="margin-top:32px;">Industrial Design Sketches</div>
+      <div class="art-modal-thumbs">
+        <div class="art-modal-thumb" onclick="enlargeArt(6)">
+          <img src="https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-id-sketches.jpg" alt="ID Sketches" loading="lazy">
+          <div class="art-modal-thumb-label">ID Sketches</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enlarged view -->
+    <div class="art-modal-enlarge-view" id="artEnlargeView">
+      <div class="art-modal-enlarge-header">
+        <button class="art-modal-back" onclick="backToGrid()">← Back to gallery</button>
+        <button class="art-modal-close" onclick="closeArtModal()" aria-label="Close">✕</button>
+      </div>
+      <div class="art-modal-enlarge-img-wrap">
+        <img id="artEnlargeImg" src="" alt="">
+      </div>
+      <div class="art-modal-enlarge-footer">
+        <button class="art-modal-nav art-modal-prev" onclick="shiftArt(-1)">←</button>
+        <span class="art-modal-counter" id="artCounter"></span>
+        <button class="art-modal-nav art-modal-next" onclick="shiftArt(1)">→</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MARBLES LIGHTBOX (kept as-is) -->
 <div class="lightbox" id="lightbox">
   <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
@@ -2111,22 +2568,83 @@
 </div>
 
 <script>
-  function toggleArt(btn) {
-    const gallery = document.getElementById('artGallery');
-    const expanded = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', !expanded);
-    gallery.classList.toggle('open', !expanded);
-  }
+  // ── ART MODAL ──────────────────────────────────────────────────────────────
+  const artImages = [
+    { src: 'https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-sweep.jpg',     alt: 'Sweep · Sting · Heavy' },
+    { src: 'https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-reckless.jpg',  alt: 'Reckless' },
+    { src: 'https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-deer.jpg',      alt: 'Deer' },
+    { src: 'https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-pierce.jpg',    alt: 'Pierce' },
+    { src: 'https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-mustache.jpg',  alt: 'Mustache' },
+    { src: 'https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-weave.jpg',     alt: 'Weave' },
+    { src: 'https://raw.githubusercontent.com/KatscratchX/ApurbaMondal-website/main/art-id-sketches.jpg', alt: 'ID Sketches' },
+  ];
+  let artIndex = 0;
 
-  // LIGHTBOX
-  let currentIndex = 0;
-
-  function openLightbox(index) {
-    currentIndex = index;
-    renderLightbox();
-    document.getElementById('lightbox').classList.add('active');
+  function openArtModal() {
+    const modal = document.getElementById('artModal');
+    document.getElementById('artGridView').style.display = '';
+    document.getElementById('artEnlargeView').style.display = 'none';
+    modal.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
+
+  function closeArtModal() {
+    document.getElementById('artModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function enlargeArt(index) {
+    artIndex = index;
+    renderEnlarged();
+    document.getElementById('artGridView').style.display = 'none';
+    document.getElementById('artEnlargeView').style.display = 'flex';
+  }
+
+  function backToGrid() {
+    document.getElementById('artGridView').style.display = '';
+    document.getElementById('artEnlargeView').style.display = 'none';
+  }
+
+  function shiftArt(dir) {
+    artIndex = (artIndex + dir + artImages.length) % artImages.length;
+    renderEnlarged();
+  }
+
+  function renderEnlarged() {
+    const img = artImages[artIndex];
+    document.getElementById('artEnlargeImg').src = img.src;
+    document.getElementById('artEnlargeImg').alt = img.alt;
+    document.getElementById('artCounter').textContent = `${artIndex + 1} / ${artImages.length}`;
+  }
+
+  // Close modal on backdrop click
+  document.getElementById('artModalBackdrop').addEventListener('click', closeArtModal);
+
+  // Keyboard nav
+  document.addEventListener('keydown', e => {
+    const artModal = document.getElementById('artModal');
+    const lb = document.getElementById('lightbox');
+
+    if (artModal.classList.contains('active')) {
+      const enlargeVisible = document.getElementById('artEnlargeView').style.display !== 'none';
+      if (e.key === 'Escape') { closeArtModal(); return; }
+      if (enlargeVisible) {
+        if (e.key === 'ArrowRight') shiftArt(1);
+        if (e.key === 'ArrowLeft')  shiftArt(-1);
+        if (e.key === 'Backspace')  backToGrid();
+      }
+      return;
+    }
+
+    if (lb.classList.contains('active')) {
+      if (e.key === 'ArrowRight') shiftLightbox(1);
+      if (e.key === 'ArrowLeft')  shiftLightbox(-1);
+      if (e.key === 'Escape')     closeLightbox();
+    }
+  });
+
+  // ── MARBLES LIGHTBOX ───────────────────────────────────────────────────────
+  let currentIndex = 0;
 
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
@@ -2134,48 +2652,18 @@
   }
 
   function shiftLightbox(dir) {
-    const total = document.querySelectorAll('.art-thumb').length;
+    const total = marblesImgs.length;
     currentIndex = (currentIndex + dir + total) % total;
-    renderLightbox();
+    renderMarblesLightbox();
   }
 
-  function renderLightbox() {
-    const thumbs = document.querySelectorAll('.art-thumb');
-    const thumb = thumbs[currentIndex];
-    const img = thumb.querySelector('img');
-    const content = document.getElementById('lightboxContent');
-    const counter = document.getElementById('lightboxCounter');
-
-    if (img) {
-      content.innerHTML = `<img src="${img.src}" alt="${img.alt || 'Artwork'}">`;
-    } else {
-      const num = String(currentIndex + 1).padStart(2, '0');
-      content.innerHTML = `<div class="lightbox-placeholder">
-        <div class="lightbox-placeholder-num">${num}</div>
-        <div class="lightbox-placeholder-text">Replace with &lt;img src="art-${currentIndex+1}.jpg"&gt;</div>
-      </div>`;
-    }
-    counter.textContent = `${currentIndex + 1} / 9`;
-  }
-
-  document.addEventListener('keydown', e => {
-    const lb = document.getElementById('lightbox');
-    if (!lb.classList.contains('active')) return;
-    if (e.key === 'ArrowRight') marblesMode ? (currentIndex = (currentIndex + 1) % marblesImgs.length, renderMarblesLightbox()) : shiftLightbox(1);
-    if (e.key === 'ArrowLeft') marblesMode ? (currentIndex = (currentIndex - 1 + marblesImgs.length) % marblesImgs.length, renderMarblesLightbox()) : shiftLightbox(-1);
-    if (e.key === 'Escape') closeLightbox();
-  });
-
-  // MARBLES IMAGE LIGHTBOX
   const marblesImgs = [
     { src: 'marbles-1.png', alt: 'Marbles — Exploded view & electrode detail' },
     { src: 'marbles-2.png', alt: 'Marbles — Final design' },
     { src: 'marbles-3.png', alt: 'Marbles — Usability testing on high fidelity protos' }
   ];
-  let marblesMode = false;
 
   function openMarbles(index) {
-    marblesMode = true;
     currentIndex = index;
     renderMarblesLightbox();
     document.getElementById('lightbox').classList.add('active');
@@ -2184,44 +2672,73 @@
 
   function renderMarblesLightbox() {
     const img = marblesImgs[currentIndex];
-    const content = document.getElementById('lightboxContent');
-    const counter = document.getElementById('lightboxCounter');
-    content.innerHTML = `<img src="${img.src}" alt="${img.alt}" style="border-radius:12px;">`;
-    counter.textContent = `${currentIndex + 1} / ${marblesImgs.length}`;
-    // Override nav buttons for marbles
-    document.querySelector('.lightbox-prev').onclick = () => { currentIndex = (currentIndex - 1 + marblesImgs.length) % marblesImgs.length; renderMarblesLightbox(); };
-    document.querySelector('.lightbox-next').onclick = () => { currentIndex = (currentIndex + 1) % marblesImgs.length; renderMarblesLightbox(); };
+    document.getElementById('lightboxContent').innerHTML = `<img src="${img.src}" alt="${img.alt}" style="border-radius:12px;">`;
+    document.getElementById('lightboxCounter').textContent = `${currentIndex + 1} / ${marblesImgs.length}`;
+    document.querySelector('.lightbox-prev').onclick = () => shiftLightbox(-1);
+    document.querySelector('.lightbox-next').onclick = () => shiftLightbox(1);
   }
 
-  // Reset lightbox nav to art mode on close
-  const origClose = window.closeLightbox;
-  window.closeLightbox = function() {
-    document.getElementById('lightbox').classList.remove('active');
-    document.body.style.overflow = '';
-    if (marblesMode) {
-      marblesMode = false;
-      // Restore art nav buttons
-      document.querySelector('.lightbox-prev').onclick = () => shiftLightbox(-1);
-      document.querySelector('.lightbox-next').onclick = () => shiftLightbox(1);
-    }
-  };
+  // ── CONTACT FORM ───────────────────────────────────────────────────────────
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('contactSubmitBtn');
+      const status = document.getElementById('contactFormStatus');
 
-  // NAV SMOOTH SCROLL
+      // Basic validation
+      const name = document.getElementById('cf-name').value.trim();
+      const contact = document.getElementById('cf-contact').value.trim();
+      const message = document.getElementById('cf-message').value.trim();
+      if (!name || !contact || !message) {
+        status.className = 'contact-form-status error';
+        status.textContent = 'Please fill in all fields.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = 'Sending… <span class="btn-arrow">⟳</span>';
+      status.className = 'contact-form-status';
+      status.textContent = '';
+
+      try {
+        const res = await fetch(contactForm.action, {
+          method: 'POST',
+          body: new FormData(contactForm),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          status.className = 'contact-form-status success';
+          status.textContent = '✓ Message sent! I\'ll get back to you soon.';
+          contactForm.reset();
+          btn.innerHTML = 'Send message <span class="btn-arrow">↗</span>';
+          btn.disabled = false;
+        } else {
+          throw new Error('Server error');
+        }
+      } catch (err) {
+        status.className = 'contact-form-status error';
+        status.textContent = 'Something went wrong. Try emailing me directly.';
+        btn.innerHTML = 'Send message <span class="btn-arrow">↗</span>';
+        btn.disabled = false;
+      }
+    });
+  }
+
+  // ── NAV SMOOTH SCROLL ──────────────────────────────────────────────────────
   document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
       const target = document.querySelector(link.getAttribute('href'));
       if (!target) return;
       const start = window.scrollY;
-      const end = target.getBoundingClientRect().top + window.scrollY - 0;
+      const end = target.getBoundingClientRect().top + window.scrollY;
       const distance = end - start;
       const duration = Math.min(600, Math.max(300, Math.abs(distance) * 0.3));
       let startTime = null;
-
       function easeInOutQuart(t) {
-        return t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
+        return t < 0.5 ? 8*t*t*t*t : 1 - Math.pow(-2*t+2,4)/2;
       }
-
       function step(timestamp) {
         if (!startTime) startTime = timestamp;
         const elapsed = timestamp - startTime;
@@ -2233,7 +2750,7 @@
     });
   });
 
-  // CURSOR
+  // ── CURSOR ─────────────────────────────────────────────────────────────────
   const cursor = document.getElementById('cursor');
   const ring = document.getElementById('cursorRing');
   let mx = 0, my = 0, rx = 0, ry = 0;
@@ -2255,33 +2772,26 @@
 
   document.querySelectorAll('a, button, .project-card, .maker-thumb, .pillar').forEach(el => {
     el.addEventListener('mouseenter', () => {
-      cursor.style.width = '20px';
-      cursor.style.height = '20px';
-      ring.style.width = '56px';
-      ring.style.height = '56px';
+      cursor.style.width = '20px'; cursor.style.height = '20px';
+      ring.style.width = '56px'; ring.style.height = '56px';
       ring.style.opacity = '0.8';
     });
     el.addEventListener('mouseleave', () => {
-      cursor.style.width = '12px';
-      cursor.style.height = '12px';
-      ring.style.width = '36px';
-      ring.style.height = '36px';
+      cursor.style.width = '12px'; cursor.style.height = '12px';
+      ring.style.width = '36px'; ring.style.height = '36px';
       ring.style.opacity = '0.5';
     });
   });
 
-  // SCROLL ANIMATIONS
+  // ── SCROLL ANIMATIONS ──────────────────────────────────────────────────────
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
+      if (entry.isIntersecting) entry.target.classList.add('visible');
     });
   }, { threshold: 0.05 });
-
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-  // FILTER PILLS
+  // ── FILTER PILLS ───────────────────────────────────────────────────────────
   document.querySelectorAll('.filter-pill').forEach(pill => {
     pill.addEventListener('click', () => {
       document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
@@ -2306,7 +2816,7 @@
     });
   });
 
-  // NAV scroll effect
+  // ── NAV SCROLL EFFECT ──────────────────────────────────────────────────────
   window.addEventListener('scroll', () => {
     const nav = document.querySelector('nav');
     if (window.scrollY > 60) {
@@ -2326,15 +2836,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
